@@ -35,17 +35,32 @@ spec:
                 }
             }
         }
-        stage("Unit Tests") {
-            steps {
-                container("node-builder") {
-                    sh "npx vitest run --reporter=verbose"
+        stage("test") {
+            parallel {
+                stage("Unit Tests") {
+                    steps {
+                        container("node-builder") {
+                            sh "npx vitest run --reporter=verbose"
+                        }
+                    }
+                }
+                stage("Playwright E2E Tests") {
+                    steps {
+                        container("playwright-runner") {
+                            sh 'npm ci'
+                            sh 'CI=true npx playwright test'
+                        }
+                    }
                 }
             }
         }
-        stage("Playwright E2E Tests") {
+        stage("e2e") {
             steps {
-                container('playwright-runner') {
-                    sh 'npm ci'
+                container("playwright-runner") {
+                    environment {
+                        E2E_BASE_URL = 'https://spanish-cards.netlify.app/'
+                    }
+                    sh "npm ci"
                     sh 'CI=true npx playwright test'
                 }
             }
