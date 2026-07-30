@@ -39,7 +39,6 @@ spec:
         stage("Unit Tests") {
             steps {
                 container("node-builder") {
-//                    sh "npm ci --include=dev"
                     sh "npx vitest run --reporter=verbose"
                 }
             }
@@ -47,23 +46,27 @@ spec:
         stage("Playwright E2E Tests") {
             steps {
                 container("playwright-runner") {
-//                    sh 'npm ci --include=dev'
                     sh 'CI=true npx playwright test'
                 }
             }
         }
 
 
-//        stage("e2e") {
-//            environment {
-//                E2E_BASE_URL = 'https://spanish-cards.netlify.app/'
-//            }
-//            steps {
-//                container("playwright-runner") {
-//                    sh "npm ci --include=dev"
-//                    sh 'CI=true npx playwright test'
-//                }
-//            }
-//        }
+        stage("e2e") {
+            environment {
+                E2E_BASE_URL = 'https://spanish-cards.netlify.app/'
+            }
+            steps {
+                container("playwright-runner") {
+                    sh 'CI=true npx playwright test'
+                }
+            }
+            post {
+                always {
+                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, icon: '', keepAll: false, reportDir: 'reports-e2e/html/', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                    junit stdioRetention: 'ALL', testResults: 'reports-e2e/junit.xml'
+                }
+            }
+        }
     }
 }
