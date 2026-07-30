@@ -40,6 +40,7 @@ spec:
                 stage("Unit Tests") {
                     steps {
                         container("node-builder") {
+                            sh "npm ci"
                             sh "npx vitest run --reporter=verbose"
                         }
                     }
