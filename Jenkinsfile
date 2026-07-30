@@ -30,7 +30,7 @@ spec:
         stage("build") {
             steps {
                 container("node-builder") {
-                    sh "npm ci"
+                    sh "npm ci --include=dev"
                     sh "npm run build"
                 }
             }
@@ -39,7 +39,7 @@ spec:
         stage("Unit Tests") {
             steps {
                 container("node-builder") {
-                    sh "npm ci --include=dev"
+//                    sh "npm ci --include=dev"
                     sh "npx vitest run --reporter=verbose"
                 }
             }
@@ -53,7 +53,7 @@ spec:
             }
         }
 
-        }
+
 //        stage("e2e") {
 //            environment {
 //                E2E_BASE_URL = 'https://spanish-cards.netlify.app/'
