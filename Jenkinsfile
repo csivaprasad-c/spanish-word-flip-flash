@@ -55,11 +55,11 @@ spec:
             }
         }
         stage("e2e") {
+            environment {
+                E2E_BASE_URL = 'https://spanish-cards.netlify.app/'
+            }
             steps {
                 container("playwright-runner") {
-                    environment {
-                        E2E_BASE_URL = 'https://spanish-cards.netlify.app/'
-                    }
                     sh "npm ci"
                     sh 'CI=true npx playwright test'
                 }
