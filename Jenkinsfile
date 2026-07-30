@@ -42,5 +42,13 @@ spec:
                 }
             }
         }
+        stage("Playwright E2E Tests") {
+            steps {
+                container('playwright-runner') {
+                    sh 'npm ci'
+                    sh 'CI=true npx playwright test'
+                }
+            }
+        }
     }
 }
