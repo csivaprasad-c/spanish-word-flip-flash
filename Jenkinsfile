@@ -48,7 +48,7 @@ spec:
                 stage("Playwright E2E Tests") {
                     steps {
                         container("playwright-runner") {
-                            sh 'npm ci'
+                            sh 'npm ci --include=dev'
                             sh 'CI=true npx playwright test'
                         }
                     }
@@ -61,7 +61,7 @@ spec:
             }
             steps {
                 container("playwright-runner") {
-                    sh "npm ci"
+                    sh "npm ci --include=dev"
                     sh 'CI=true npx playwright test'
                 }
             }
