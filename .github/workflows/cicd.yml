@@ -66,3 +66,20 @@ jobs:
           path: reports-e2e/html/
           if-no-files-found: error
 
+  e2e:
+    name: E2E (Playwright)
+    runs-on: ubuntu-latest
+    needs: [build, test_unit, test_integration]
+    container:
+      image: mcr.microsoft.com/playwright:v1.54.2-jammy
+      options: --user 1001
+      env:
+        CI: true
+    env:
+      E2E_BASE_URL: https://spanish-cards.netlify.app/
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Dependencies
+        run: npm ci
+      - name: Run Playwright tests
+        run: npx playwright test
